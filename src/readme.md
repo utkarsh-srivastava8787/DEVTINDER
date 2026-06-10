@@ -1,0 +1,5 @@
+-instalize git
+-git ignore
+-create routes 
+- add nodemon to run file automatically
+- order of routes metters alot
