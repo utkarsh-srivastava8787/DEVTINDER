@@ -5,13 +5,23 @@
 const express = require("express");
 const app = express();
 
-app.get("/user/:userId/:name/:password", (req, res) => {
-    console.log(req.params)
-    res.send({
-        name: "utkarsh",
-        class: "BCA"
-    })
-})
+
+// we can add multiple routes handlers (middleware)  for  a single  route 
+
+app.get("/user/:userId/:name/:password", (req, res,next) => {
+
+    res.send(
+        console.log("response1!"),
+        next()
+
+    )
+
+},
+    (req, res) => {
+        res.send("how are you ")
+    }
+
+)
 app.post("/user", (req, res) => {
     res.send('post req executed')
 })
