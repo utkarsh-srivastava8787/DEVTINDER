@@ -36,3 +36,4 @@
 -If you don't call next(), the request-response cycle ends and no further middleware runs.
 
 -multiple route hadlers
+-how express JS handle requests behind the scenes
