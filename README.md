@@ -37,3 +37,9 @@
 
 -multiple route hadlers
 -how express JS handle requests behind the scenes
+- mongodb 
+- create mongodb account use atlas free  add cluster and connect with databsefile
+- now we connect successfully
+- use mongoose instead of mongodb 
+- use mongoose then connect with mongodb server 
+- we can run the server when mongoose database is connected successfully 
