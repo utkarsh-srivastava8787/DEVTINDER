@@ -43,3 +43,12 @@
 - use mongoose instead of mongodb 
 - use mongoose then connect with mongodb server 
 - we can run the server when mongoose database is connected successfully 
+- creating mongoose user schema 
+-for creating schema we have add folder name Models 
+- on models folder add a file naem user.js where we create schecma 
+- after schema is created succesfully we have to export the schema
+- on app.js we create a user information and import schema from models/user.js
+- we have to call app.post method to post the user detail in  database 
+- on the post we have to create user instance with new keyword 
+- after that the imported schema from user.js we have to save it by using  asyn await 
+- save the database like "user.save()" to store valur in the database.
