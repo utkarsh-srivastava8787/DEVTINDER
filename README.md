@@ -51,4 +51,8 @@
 - we have to call app.post method to post the user detail in  database 
 - on the post we have to create user instance with new keyword 
 - after that the imported schema from user.js we have to save it by using  asyn await 
-- save the database like "user.save()" to store valur in the database.
+- save the database like "user.save()" to store value in the database.
+- add default user data and save to the mongodb 
+- now we have to store data of a user from postman 
+- add data in body use json data to store on monggoose
+- on app.js we have to use a inbult midleware from express js which is app.use(express.json()) so that  
