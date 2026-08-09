@@ -55,4 +55,12 @@
 - add default user data and save to the mongodb 
 - now we have to store data of a user from postman 
 - add data in body use json data to store on monggoose
-- on app.js we have to use a inbult midleware from express js which is app.use(express.json()) so that  
+- on app.js we have to use a inbult midleware from express js which is app.use(express.json()) 
+
+- Explore schematypes options from documentation.
+- add required, unique, trim etc.. type options 
+- improve DB schema-  PUT all appropriate validation on each fields in schema
+- Add API livel validation on patch request & /signUp post Api
+- Data sentization: Add API validation for each fields
+- validator libraray 
+- use library function for email and phone numbers
