@@ -64,3 +64,16 @@
 - Data sentization: Add API validation for each fields
 - validator libraray 
 - use library function for email and phone numbers
+
+- Validate data in signup Api
+- Install bcrypt package
+- create password using bcrypt.hash & save the user us excrupted password
+- create a login api 
+- store data in express cookies 
+- add cookie parser to handle cookies 
+- use jwt token to authenticate other routes 
+- use jwt token on login page to store jwt token on cookies 
+- verify jwt token on other routes to authenticate user 
+- create a authentication middleware so that we are not to check authentication on each route
+we just call add middleware and verify the user
+- flow will be user> login > verify email > verify password > generate jwt token > add in the cookies > user is Logged in > user use other routes > get cookies > verify token > sucessfilly access routes > this process run same for other users as well

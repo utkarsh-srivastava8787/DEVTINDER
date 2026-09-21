@@ -6,99 +6,109 @@ const dbConnect = require("./database/database.js")
 const express = require("express");
 const app = express();
 const userData = require('./models/user.js')
-
-
+const bcrypt = require('bcrypt');
+const {authentication}= require("./middlewares/auth.js")
+const saltRounds = 10;
+var jwt = require('jsonwebtoken');
+const { authenticate } = require('./utils/validate.js')
+var cookieParser = require('cookie-parser');
 
 app.use(express.json())
+app.use(cookieParser());
 
+
+// -----------post Api data validation password incryption ----------------
 app.post("/signUp", async (req, res) => {
-  const userDetail = new userData(req.body)
+  const userReq = req.body;
   try {
-    await userDetail.save()
-    res.send("user created succesfully")
-  } catch (err) {
-    res.send("Some Error occured " + err)
+    const { password } = req.body
+
+    //encrypt the password
+    const bcryptPassword = await bcrypt.hash(password, saltRounds).then(function (hash) {
+      // Store hash in your password DB.
+      return hash
+    });
+    console.log("bcryptPassword", bcryptPassword)
+
+    // validation of data 
+    authenticate(req)
+    //creating a new instance of the user model
+    // const data = new userData({...userReq,"password":bcryptPassword});
+    const data = new userData({
+      "firstName": req.body.firstName,
+      "address": req.body.address,
+      "phone": req.body.phone,
+      "email": req.body.email,
+
+      "password": bcryptPassword,
+      "skills": req.body.skills
+    })
+    await data.save();
+    res.send("data added successfully!")
+  } catch (error) {
+    res.status(400).send("error :" + error)
   }
 
 })
 
-// --------------post/add the user records -------------
-// app.post('/signUp', async (req, res) => {
-//   // console.log(req.body)
-//   res.send("data is successfully created")
-//   // creating instance of the user model
-//   const user = new userData(req.body)
-
-//   try {
-//     // save the data to the databse  we use save() 
-//     await user.save();
-//     res.send("data is stored successfully")
-//   } catch (err) {
-//     res.status(404).send("error pls check", err.message)
-//   }
-// })
-
-// -------------delete the user record-----------
-app.delete("/signUp", async (req, res) => {
+// ------login api ----------- 
+app.post('/login', async (req, res) => {
   try {
-
-    // dynamic way to assign value to userData
-    const userName = req.body.firstName;
-    const result = await userData.deleteOne({ firstName: userName });
-    res.send("User deleted successfully");
-
-    if (result.deletedCount === 0) {
-      return res.status(404).send("User not found");
+    const { email, password } = req.body
+    const user = await userData.findOne({ email })
+    // console.log
+    if (!user) {
+      return res.status(400).send('authenticated unsuccessful')
     }
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error deleting user");
+
+    const isMatch =  bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      res.status(400).send('data is not found')
+     
+    }
+
+    // if all things works good then save cookies
+    
+
+    const token =  jwt.sign({ _id: user._id }, 'devTinder');
+    // console.log('token',token)
+    res.cookie('token', token)
+
+    res.send('sucessfully logged in ')
+
+  } catch (error) {
+    res.status(400).send("data is not matched")
+  }
+
+})
+// ------------------------get profile using cookies and jwt------------------
+
+
+app.get("/profile", authentication, async (req, res) => {
+  try {
+    // ✅ Access the user attached by authentication middleware
+    console.log('user', req.user);
+
+    // ✅ Send back user data
+    res.send(req.user);
+
+  } catch (error) {
+    console.error("Profile error:", error);
+    res.status(400).send("Please login first");
   }
 });
 
-// --------------find the user record-----------------
-app.get("/signUp", async (req, res) => {
-  const findName = req.body.firstName
-  try {
-    const data = await userData.find({ firstName: findName });
-    // console.log("findName: "+ findName)
-    res.send("here is the data :" + data)
-  } catch (err) {
-    res.send("data not found", err)
+app.get('/products', authentication, (req,res,next)=>{
+  try{
+    res.send("here are Our Products......")
+  }catch(Error){
+    res.send("error:",Error.message)
   }
 })
 
-// -----------------update the user records--------------
-app.patch('/signUp/:userId', async (req, res) => {
-  const userId = req.params?.userId;
-  const data = req.body;
 
-  try {
-// -------------here we use an array which helps us to not update these value by the user 
-    const updateAllowed = [
-      "firstName",
-      "address",
-      "phone",
-      "skills"
-    ]
-// ---this will validation to check each keys of the response body object if the key is inclued in updateAllowed array then return true else return false-------
-    const isUpdated = Object.keys(data).every((k) => {
-
-      return updateAllowed.includes(k)
-    })
-    // ------------if isUpdated is false the if conditon run and response is return to the server and data is not updated----------
-    
-    if (!isUpdated) {
-      res.send("data is not updated ")
-    }
-    await userData.findByIdAndUpdate(userId, data);
-
-    res.send('sucessfully updated');
-  } catch (err) {
-    res.send("data is not updated yet" + err);
-  }
-})
 
 dbConnect().then(() => {
   console.log('Databae connection established....');

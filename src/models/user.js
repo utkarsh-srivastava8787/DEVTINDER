@@ -13,11 +13,12 @@ const UserSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true,
-        validate: { validator: (value)=>{
-            if(!validator.isMobilePhone(value)){
-                throw new Error("Enter Valid Phone number")
+        validate: {
+            validator: (value) => {
+                if (!validator.isMobilePhone(value)) {
+                    throw new Error("Enter Valid Phone number")
+                }
             }
-        }
         }
     },
     age: {
@@ -41,6 +42,12 @@ const UserSchema = new mongoose.Schema({
             }; //=> true)
         },
         trim: true
+    },
+
+    password: {
+        type: String,
+        minlength: 4,
+        // maxlength: 8
     }
 
 })
