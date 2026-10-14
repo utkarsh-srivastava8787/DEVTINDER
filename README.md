@@ -76,4 +76,11 @@
 - verify jwt token on other routes to authenticate user 
 - create a authentication middleware so that we are not to check authentication on each route
 we just call add middleware and verify the user
-- flow will be user> login > verify email > verify password > generate jwt token > add in the cookies > user is Logged in > user use other routes > get cookies > verify token > sucessfilly access routes > this process run same for other users as well
+- flow will be user> login > verify email > dcrypt password >verify password > generate jwt token > add in the cookies > user is Logged in > user use other routes > get cookies > verify token > sucessfilly access routes > this process run same for other users as well
+-set the expiry of the jwt token  and cookied to 7dayd
+- create user schema method to compare password( passwordInputByUser)
+
+-explore tinder api in devTinder_api
+- create a list of API you can think of in Dev Tinder
+- Group multiple routes under respective routes
+- read documetation for express.Router
